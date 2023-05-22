@@ -1,0 +1,161 @@
+class FoodItem:
+    def __init__(self, name, quantity, price, discount, stock):
+        self.food_id = None
+        self.name = name
+        self.quantity = quantity
+        self.price = price
+        self.discount = discount
+        self.stock = stock
+
+class Admin:
+    def __init__(self):
+        self.food_items = []
+        self.food_id_counter = 1
+
+    def add_food_item(self, name, quantity, price, discount, stock):
+        food_item = FoodItem(name, quantity, price, discount, stock)
+        food_item.food_id = self.food_id_counter
+        self.food_id_counter += 1
+        self.food_items.append(food_item)
+
+    def edit_food_item(self, food_id, name, quantity, price, discount, stock):
+        for food_item in self.food_items:
+            if food_item.food_id == food_id:
+                food_item.name = name
+                food_item.quantity = quantity
+                food_item.price = price
+                food_item.discount = discount
+                food_item.stock = stock
+                break
+
+    def view_food_items(self):
+        for food_item in self.food_items:
+            print("FoodID:", food_item.food_id)
+            print("Name:", food_item.name)
+            print("Quantity:", food_item.quantity)
+            print("Price:", food_item.price)
+            print("Discount:", food_item.discount)
+            print("Stock:", food_item.stock)
+            print()
+
+    def remove_food_item(self, food_id):
+        for food_item in self.food_items:
+            if food_item.food_id == food_id:
+                self.food_items.remove(food_item)
+                break
+
+class User:
+    def __init__(self, full_name, phone_number, email, address, password):
+        self.full_name = full_name
+        self.phone_number = phone_number
+        self.email = email
+        self.address = address
+        self.password = password
+        self.order_history = []
+
+    def place_order(self, selected_items):
+        order = Order(selected_items)
+        self.order_history.append(order)
+
+    def view_order_history(self):
+        for order in self.order_history:
+            print("OrderID:", order.order_id)
+            print("Selected Items:")
+            for item in order.selected_items:
+                print("- Name:", item.name)
+                print("  Quantity:", item.quantity)
+                print("  Price:", item.price)
+            print()
+
+    def update_profile(self, full_name=None, phone_number=None, email=None, address=None, password=None):
+        if full_name:
+            self.full_name = full_name
+        if phone_number:
+            self.phone_number = phone_number
+        if email:
+            self.email = email
+        if address:
+            self.address = address
+        if password:
+            self.password = password
+
+class Order:
+    def __init__(self, selected_items):
+        self.order_id = None
+        self.selected_items = selected_items
+        self.order_status = "Pending"
+
+# Example Usage:
+
+admin = Admin()
+
+admin.add_food_item("Tandoori Chicken", "4 pieces", 240, 0, 10)
+admin.add_food_item("Vegan Burger", "1 piece", 320, 0, 5)
+admin.add_food_item("Truffle Cake", "500gm", 900, 0, 3)
+
+admin.view_food_items()
+
+admin.edit_food_item(2, "Vegan Burger", "2 pieces", 350, 0, 3)
+
+admin.remove_food_item(1)
+
+admin.view_food_items()
+
+user = User("John Doe", "1234567890", "john@example.com", "123 Main St", "password")
+
+# User Registration
+user = User("John Doe", "1234567890", "john@example.com", "123 Main St", "password")
+
+# User Login
+user = User("John Doe", "1234567890", "john@example.com", "123 Main St", "password")
+
+# User Menu
+print("1. Place New Order")
+print("2. Order History")
+print("3. Update Profile")
+
+choice = int(input("Enter your choice: "))
+
+if choice == 1:
+    # Show food menu
+    admin.view_food_items()
+
+    # User selects food items
+    selected_items = []
+    food_ids = input("Enter the food item numbers you want to order (separated by commas): ")
+    food_ids = food_ids.split(",")
+
+    for food_id in food_ids:
+        food_id = int(food_id.strip())
+        for food_item in admin.food_items:
+            if food_item.food_id == food_id:
+                selected_items.append(food_item)
+
+    # Display selected items
+    print("Selected Items:")
+    for item in selected_items:
+        print("- Name:", item.name)
+        print("  Quantity:", item.quantity)
+        print("  Price:", item.price)
+
+    # Place order
+    user.place_order(selected_items)
+    print("Order placed successfully!")
+
+elif choice == 2:
+    # View order history
+    user.view_order_history()
+
+elif choice == 3:
+    # Update profile
+    full_name = input("Enter your full name: ")
+    phone_number = input("Enter your phone number: ")
+    email = input("Enter your email address: ")
+    address = input("Enter your address: ")
+    password = input("Enter your password: ")
+
+    user.update_profile(full_name, phone_number, email, address, password)
+    print("Profile updated successfully!")
+
+else:
+    print("Invalid choice!")
